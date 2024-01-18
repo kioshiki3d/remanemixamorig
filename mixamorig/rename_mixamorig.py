@@ -5,12 +5,12 @@ from bpy.types import Panel,Operator
 bl_info = {
     "name": "rename_mixamorig_bonename", # 名前(自由記入)
     "author": "Kageji", # 作者(自由記入)
-    "version": (1, 0), # バージョン(x,x,x)
+    "version": (1, 1), # バージョン(x,x,x)
     "blender": (2, 83, 0), # Blender Ver.(x,x,x)
     "location": "3D View > Sidebar", # ロケーション(自由記入)
     "description": "rename mixamorig bonename", # 詳細(自由記入)
     "warning": "", # ワーニング(自由記入)
-    "support": "TESTING", # "OFFICAL"、"COMMUNITY"、"TESTING"
+    "support": "COMMUNITY", # "OFFICAL"、"COMMUNITY"、"TESTING"
     "wiki_url": "", # URL(自由記入)
     "tracker_url": "", # URL(自由記入)
     "category": "Object", # カテゴリー(要検索)
@@ -28,7 +28,7 @@ class KJ_Rename_PT_Panel(Panel):
     def draw(self, context):
         layout = self.layout
         scene = context.scene
-        layout.prop_search(scene, "targetArmature", bpy.data, "armatures", text="", icon="ARMATURE_DATA") 
+        layout.prop_search(scene, "targetArmature", bpy.data, "armatures", text="", icon="ARMATURE_DATA")
         layout.separator()
         layout.label(text="rename mixamorig")
         layout.operator(KJ_rename_bone.bl_idname, text="rename")
@@ -60,7 +60,9 @@ class KJ_rename_bone_base(Operator):
         if context.object.mode != 'OBJECT':
             bpy.ops.object.mode_set(mode = "OBJECT")
 
-        obj = bpy.data.objects[context.scene.targetArmature] #bpy.context.active_object
+        obj = context.scene.targetArmature #bpy.context.active_object
+        if isinstance(obj, bpy.types.Armature):
+            obj = bpy.data.objects[obj.name]
         for bone in obj.data.bones:
             bonename = bone.name
             bonename = bonename.replace("mixamorig:", "")
@@ -88,7 +90,10 @@ class KJ_dissolve_chest(KJ_rename_bone_base):
 
     def execute(self, context):
         super().execute(context)
-        obj = bpy.data.objects[context.scene.targetArmature] #bpy.context.active_object
+        obj = context.scene.targetArmature #bpy.context.active_object
+        if isinstance(obj, bpy.types.Armature):
+            obj = bpy.data.objects[obj.name]
+        context.view_layer.objects.active = obj
         bpy.ops.object.mode_set(mode = "EDIT")
         for bone in obj.data.edit_bones:
             bonename = bone.name
@@ -138,7 +143,7 @@ classes = [KJ_Rename_PT_Panel, KJ_rename_bone, KJ_dissolve_chest]
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
-        bpy.types.Scene.targetArmature = bpy.props.StringProperty() #PointerProperty(type=bpy.types.Object)
+    bpy.types.Scene.targetArmature = bpy.props.PointerProperty(type=bpy.types.Object) # StringProperty() #
     print("rename mixamorig bone name is active")
 
 

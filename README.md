@@ -19,3 +19,8 @@ Upper、Lower ChestをChestに変換
 v1.0 2324/1/18
 Armature選択プロパティの追加
 dissolve Upperchest機能の追加
+スポイト選択の追加
+
+v1.1 2324/1/19
+mesh選択時active objectのmesh editモードの修正
+"COMMUNITY"変更
