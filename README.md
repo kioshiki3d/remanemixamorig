@@ -7,12 +7,13 @@
   
 
 # Hou to use
+このリポジトリをzipダウンロードすれば使用可能  
 - パネルプロパティに対象のArmatureを選択する  
 - "rename mixamorig"を実行するとボーン名称変更が実行される  
 - "dissolve upperchest"を実行するとボーン名称変更とUpperchestの削除が実行される  
 詳細は[note](https://note.com/preview/na94d5ed856a2?prev_access_key=2de33b6386e5ccc854b75f3de1e33490)参照
   
-  
+
 # Revision
 v0.1: 2021/3/28  
 first release  
