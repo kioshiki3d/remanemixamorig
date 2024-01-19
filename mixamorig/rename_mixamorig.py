@@ -11,16 +11,16 @@ bl_info = {
     "description": "rename mixamorig bonename", # 詳細(自由記入)
     "warning": "", # ワーニング(自由記入)
     "support": "COMMUNITY", # "OFFICAL"、"COMMUNITY"、"TESTING"
-    "wiki_url": "", # URL(自由記入)
-    "tracker_url": "", # URL(自由記入)
+    "wiki_url": "https://github.com/kioshiki3d/remanemixamorig", # URL(自由記入)
+    "tracker_url": "https://twitter.com/shadow003min", # URL(自由記入)
     "category": "Object", # カテゴリー(要検索)
 }
 
 class KJ_Rename_PT_Panel(Panel):
-    bl_label = "Rename Mixamori"# 展開時のラベル名
+    bl_label = "Rename Mixamorig"# 展開時のラベル名
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
-    bl_category = "KJaddon" # 横タブ名
+    bl_category = "RenameRig" # 横タブ名
 
     # @classmethod
     # def poll(cls, context):
@@ -38,6 +38,9 @@ class KJ_Rename_PT_Panel(Panel):
 
 
 class KJ_rename_bone_base(Operator):
+    obj = None
+    rpt_txt = ""
+
     def renameRL(self, name, target):
         new_name = name
         name_end = ""
@@ -57,13 +60,16 @@ class KJ_rename_bone_base(Operator):
 
 
     def execute(self, context):
+        if context.scene.targetArmature==None:
+            self.rpt_txt = "select armature"
+            return {"FINISHED"}
+
         if context.object.mode != 'OBJECT':
             bpy.ops.object.mode_set(mode = "OBJECT")
 
-        obj = context.scene.targetArmature #bpy.context.active_object
-        if isinstance(obj, bpy.types.Armature):
-            obj = bpy.data.objects[obj.name]
-        for bone in obj.data.bones:
+        obj_name = context.scene.targetArmature.name
+        self.obj = bpy.data.objects[obj_name] #bpy.context.active_object
+        for bone in self.obj.data.bones:
             bonename = bone.name
             bonename = bonename.replace("mixamorig:", "")
             bonename = bonename.replace("Spine1", "LowerChest")
@@ -80,7 +86,9 @@ class KJ_rename_bone(KJ_rename_bone_base):
 
     def execute(self, context):
         super().execute(context)
-        self.report({'INFO'}, "FINISHED rename mixamo rig name")
+        if self.rpt_txt=="":
+            self.rpt_txt = "FINISHED rename mixamo rig name"
+        self.report({'INFO'}, self.rpt_txt)
         return {"FINISHED"}
 
 
@@ -90,12 +98,13 @@ class KJ_dissolve_chest(KJ_rename_bone_base):
 
     def execute(self, context):
         super().execute(context)
-        obj = context.scene.targetArmature #bpy.context.active_object
-        if isinstance(obj, bpy.types.Armature):
-            obj = bpy.data.objects[obj.name]
-        context.view_layer.objects.active = obj
+        if self.rpt_txt!="":
+            self.report({'INFO'}, self.rpt_txt)
+            return {"FINISHED"}
+
+        context.view_layer.objects.active = self.obj
         bpy.ops.object.mode_set(mode = "EDIT")
-        for bone in obj.data.edit_bones:
+        for bone in self.obj.data.edit_bones:
             bonename = bone.name
             if "LowerChest" in bonename:
                 lowerchest_bone = bone
@@ -107,11 +116,11 @@ class KJ_dissolve_chest(KJ_rename_bone_base):
         chestname = chestname.replace("Lower", "")
         upper_tail = upperchest_bone.tail
         lowerchest_bone.tail = upper_tail
-        obj.data.edit_bones.remove(upperchest_bone)
+        self.obj.data.edit_bones.remove(upperchest_bone)
         lowerchest_bone.name = chestname
         bpy.ops.object.mode_set(mode = "OBJECT")
 
-        for child in obj.children:
+        for child in self.obj.children:
             if isinstance(child.data, bpy.types.Mesh):
                 # UpperChestのウエイトがない場合
                 if not child.vertex_groups.get(upper_name):
