@@ -152,7 +152,7 @@ classes = [KJ_Rename_PT_Panel, KJ_rename_bone, KJ_dissolve_chest]
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
-    bpy.types.Scene.targetArmature = bpy.props.PointerProperty(type=bpy.types.Object) # StringProperty() #
+    bpy.types.Scene.targetArmature = bpy.props.PointerProperty(type=bpy.types.Armature)
     print("rename mixamorig bone name is active")
 
 
