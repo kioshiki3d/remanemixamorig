@@ -1,6 +1,7 @@
 import re
 import bpy
 from bpy.types import Panel,Operator
+from bpy.props import PointerProperty
 
 bl_info = {
     "name": "rename_mixamorig_bonename", # 名前(自由記入)
@@ -28,7 +29,7 @@ class KJ_Rename_PT_Panel(Panel):
     def draw(self, context):
         layout = self.layout
         scene = context.scene
-        layout.prop_search(scene, "targetArmature", bpy.data, "armatures", text="", icon="ARMATURE_DATA")
+        layout.prop_search(scene, "KjrmTargetArmature", bpy.data, "armatures", text="", icon="ARMATURE_DATA")
         layout.separator()
         layout.label(text="rename mixamorig")
         layout.operator(KJ_rename_bone.bl_idname, text="rename")
@@ -60,14 +61,14 @@ class KJ_rename_bone_base(Operator):
 
 
     def execute(self, context):
-        if context.scene.targetArmature==None:
+        if context.scene.KjrmTargetArmature==None:
             self.rpt_txt = "select armature"
             return {"FINISHED"}
 
         if context.object.mode != 'OBJECT':
             bpy.ops.object.mode_set(mode = "OBJECT")
 
-        obj_name = context.scene.targetArmature.name
+        obj_name = context.scene.KjrmTargetArmature.name
         self.obj = bpy.data.objects[obj_name] #bpy.context.active_object
         for bone in self.obj.data.bones:
             bonename = bone.name
@@ -152,14 +153,14 @@ classes = [KJ_Rename_PT_Panel, KJ_rename_bone, KJ_dissolve_chest]
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
-    bpy.types.Scene.targetArmature = bpy.props.PointerProperty(type=bpy.types.Armature)
+    bpy.types.Scene.KjrmTargetArmature = PointerProperty(type=bpy.types.Armature)
     print("rename mixamorig bone name is active")
 
 
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
-        del bpy.types.Scene.targetArmature
+        del bpy.types.Scene.KjrmTargetArmature
     print("rename mixamorig bone name is inactive")
 
 
