@@ -29,7 +29,7 @@ class KJ_Rename_PT_Panel(Panel):
     def draw(self, context):
         layout = self.layout
         scene = context.scene
-        layout.prop_search(scene, "KjrmTargetArmature", bpy.data, "armatures", text="", icon="ARMATURE_DATA")
+        layout.prop_search(scene, "KjrmTargetArmature", bpy.data, "objects", text="", icon="ARMATURE_DATA")
         layout.separator()
         layout.label(text="rename mixamorig")
         layout.operator(KJ_rename_bone.bl_idname, text="rename")
@@ -68,8 +68,7 @@ class KJ_rename_bone_base(Operator):
         if context.object.mode != 'OBJECT':
             bpy.ops.object.mode_set(mode = "OBJECT")
 
-        obj_name = context.scene.KjrmTargetArmature.name
-        self.obj = bpy.data.objects[obj_name] #bpy.context.active_object
+        self.obj = context.scene.KjrmTargetArmature #bpy.context.active_object
         for bone in self.obj.data.bones:
             bonename = bone.name
             bonename = bonename.replace("mixamorig:", "")
@@ -150,10 +149,17 @@ class KJ_dissolve_chest(KJ_rename_bone_base):
 classes = [KJ_Rename_PT_Panel, KJ_rename_bone, KJ_dissolve_chest]
 
 
+def filter_armature(self, object):
+    return object.type == "ARMATURE"
+
+
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
-    bpy.types.Scene.KjrmTargetArmature = PointerProperty(type=bpy.types.Armature)
+    bpy.types.Scene.KjrmTargetArmature = PointerProperty(
+        type=bpy.types.Object,
+        poll=filter_armature,
+        )
     print("rename mixamorig bone name is active")
 
 

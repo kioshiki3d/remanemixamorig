@@ -27,7 +27,7 @@ Armature選択プロパティの追加
 dissolve Upperchest機能の追加  
 スポイト選択の追加  
   
-v1.1: 2324/2/1  
+v1.1: 2324/2/4  
 "COMMUNITY"変更  
 細かいバグ修正  
 github整理  
