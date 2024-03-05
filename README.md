@@ -1,5 +1,5 @@
 # Overview
-[mixamo](https://www.mixamo.com/)
+![mixamo](https://www.mixamo.com/)
 からダウンロードしたアバターのリグ名を修正するアドオン  
 - bone "mixamorig"の文字を消去  
 - "Right"、"Left"表記を対称操作可能な"R"、"L"表記に変更  
@@ -11,7 +11,9 @@
 - パネルプロパティに対象のArmatureを選択する  
 - "rename mixamorig"を実行するとボーン名称変更が実行される  
 - "dissolve upperchest"を実行するとボーン名称変更とUpperchestの削除が実行される  
-詳細は[note](https://note.com/preview/na94d5ed856a2?prev_access_key=2de33b6386e5ccc854b75f3de1e33490)参照
+詳細は
+![note](https://note.com/preview/na94d5ed856a2?prev_access_key=06c01d8b5be97ea1075ee0c7c00fb0b7)
+参照
   
 
 # Revision
