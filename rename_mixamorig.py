@@ -21,7 +21,7 @@ class KJ_Rename_PT_Panel(Panel):
     bl_label = "Rename Mixamorig"# 展開時のラベル名
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
-    bl_category = "RenameRig" # 横タブ名
+    bl_category = "kjtools" # 横タブ名
 
     # @classmethod
     # def poll(cls, context):
