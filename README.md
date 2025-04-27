@@ -30,6 +30,10 @@
 
 **注意**: アーマチュアを選択しないとエラーメッセージが表示されます。
 
+詳細は
+[note](https://note.com/preview/na94d5ed856a2?prev_access_key=06c01d8b5be97ea1075ee0c7c00fb0b7)
+参照  
+
 
 # Revision
 v0.1: 2021/3/28  
